@@ -14,6 +14,41 @@ function AutoBind(
   }
 }
 
+interface Validatable {
+  value: string | number
+  required?: boolean
+  minLength?: number
+  maxLength?: number
+  min?: number
+  max?: number
+}
+
+function validate(input: Validatable) {
+  let isValid = true
+  const { value } = input
+  if (input.required) {
+    isValid = isValid && !!value.toString().trim()
+    console.log(isValid, "required")
+  }
+  if (input.maxLength != null && typeof value === "string") {
+    isValid = isValid && value.length <= input.maxLength
+    console.log(isValid, "maxLength")
+  }
+  if (input.minLength != null && typeof value === "string") {
+    isValid = isValid && value.length >= input.minLength
+    console.log(isValid, "minLength")
+  }
+  if (input.max != null && typeof value === "number") {
+    isValid = isValid && +value <= input.max
+    console.log(isValid, "max")
+  }
+  if (input.min != null && typeof value === "number") {
+    isValid = isValid && +value >= input.min
+    console.log(isValid, "min")
+  }
+  return isValid
+}
+
 class ProjectInput {
   // Goal: Render form template
 
@@ -73,6 +108,31 @@ class ProjectInput {
     const description = this.descriptionInput.value
     const people = this.peopleInput.value
 
+    const titleValidateConfig: Validatable = {
+      value: title,
+      required: true,
+    }
+
+    const descriptionValidateConfig: Validatable = {
+      value: description,
+      required: true,
+      minLength: 5,
+    }
+
+    const peopleValidateConfig: Validatable = {
+      value: people,
+      required: true,
+      min: 1,
+      max: 5,
+    }
+
+    if (
+      !validate(titleValidateConfig) ||
+      !validate(descriptionValidateConfig) ||
+      !validate(peopleValidateConfig)
+    ) {
+      alert("Invalid input")
+    }
     return [title, description, +people]
   }
 
