@@ -59,7 +59,27 @@ class ProjectInput {
   @AutoBind
   private submitHandler(e: Event) {
     e.preventDefault()
-    console.log(this.titleInput.value)
+    const userInput = this.gatherInput()
+    if (Array.isArray(userInput)) {
+      const [title, description, people] = userInput
+      console.log(title, description, people)
+    }
+
+    this.clearInput()
+  }
+
+  private gatherInput(): [string, string, number] | void {
+    const title = this.titleInput.value
+    const description = this.descriptionInput.value
+    const people = this.peopleInput.value
+
+    return [title, description, +people]
+  }
+
+  private clearInput() {
+    this.titleInput.value = ""
+    this.descriptionInput.value = ""
+    this.peopleInput.value = ""
   }
 }
 
