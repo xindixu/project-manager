@@ -1,3 +1,19 @@
+function AutoBind(
+  _: any,
+  __: string,
+  descriptor: PropertyDescriptor,
+): PropertyDescriptor {
+  const originalMethod = descriptor.value
+
+  return {
+    configurable: true,
+    get() {
+      const boundFn = originalMethod.bind(this)
+      return boundFn
+    },
+  }
+}
+
 class ProjectInput {
   // Goal: Render form template
 
@@ -37,9 +53,10 @@ class ProjectInput {
   }
 
   private configure() {
-    this.form.addEventListener("submit", this.submitHandler.bind(this))
+    this.form.addEventListener("submit", this.submitHandler)
   }
 
+  @AutoBind
   private submitHandler(e: Event) {
     e.preventDefault()
     console.log(this.titleInput.value)
