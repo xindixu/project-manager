@@ -5,7 +5,13 @@ class ProjectInput {
 
   containerEl: HTMLDivElement
 
-  element: HTMLFormElement
+  form: HTMLFormElement
+
+  titleInput: HTMLInputElement
+
+  descriptionInput: HTMLInputElement
+
+  peopleInput: HTMLInputElement
 
   constructor() {
     this.templateEl = document.getElementById(
@@ -15,13 +21,28 @@ class ProjectInput {
     this.containerEl = document.getElementById("app")! as HTMLDivElement
 
     const importedNode = document.importNode(this.templateEl.content, true)
-    this.element = importedNode.firstElementChild as HTMLFormElement
+    this.form = importedNode.firstElementChild as HTMLFormElement
+    this.form.id = "user-input"
 
+    this.titleInput = this.form.querySelector("#title")!
+    this.descriptionInput = this.form.querySelector("#description")!
+    this.peopleInput = this.form.querySelector("#people")!
+
+    this.configure()
     this.attach()
   }
 
   private attach() {
-    this.containerEl.insertAdjacentElement("afterbegin", this.element)
+    this.containerEl.insertAdjacentElement("afterbegin", this.form)
+  }
+
+  private configure() {
+    this.form.addEventListener("submit", this.submitHandler.bind(this))
+  }
+
+  private submitHandler(e: Event) {
+    e.preventDefault()
+    console.log(this.titleInput.value)
   }
 }
 
